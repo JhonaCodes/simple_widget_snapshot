@@ -1,0 +1,19 @@
+name: simple_widget_snapshot
+description: Simple library for widget snapshot
+version: 1.0.0
+repository: https://github.com/JhonaCodes/simple_widget_snapshot
+homepage: https://github.com/JhonaCodes/simple_widget_snapshot
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  path_provider: ^2.0.15
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
