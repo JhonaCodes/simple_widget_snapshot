@@ -1,3 +1,9 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+* Version stable
+
+## 1.0.1
+
+* Complete Readme
+* Update Example to flutter 3.10
+* Add photos.
