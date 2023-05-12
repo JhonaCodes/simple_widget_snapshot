@@ -1,5 +1,5 @@
 # simple_widget_snapshot
-<img src="https://raw.githubusercontent.com/JhonaCodes/simple_build_context/main/assets/simple_widget_snapshot.png" width="300" height="150" />
+<img src="https://raw.githubusercontent.com/JhonaCodes/simple_widget_snapshot/main/assets/simple_widget_snapshot.png" width="300" height="150" />
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Nombre del paquete](https://img.shields.io/pub/v/simple_widget_snapshot.svg)](https://pub.dev/packages/simple_widget_snapshot) [![Dart 3](https://img.shields.io/badge/Dart-3%2B-blue.svg)](https://dart.dev/) [![Flutter 3.10](https://img.shields.io/badge/Flutter-3%2B-blue.svg)](https://flutter.dev/)
 
@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ```
 
-<img src="https://raw.githubusercontent.com/JhonaCodes/simple_build_context/main/assets/step1.png.png" width="600" height="400" />
+<img src="https://raw.githubusercontent.com/JhonaCodes/simple_widget_snapshot/main/assets/step1.png" width="400" height="800" />
 
 
-<img src="https://raw.githubusercontent.com/JhonaCodes/simple_build_context/main/assets/step2.png.png" width="600" height="400" />
+<img src="https://raw.githubusercontent.com/JhonaCodes/simple_widget_snapshot/main/assets/step2.png" width="400" height="800" />
