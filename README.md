@@ -125,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
   _repaintSnapShot(GlobalKey<State<StatefulWidget>> gKey) async {
     ByteData byteData = await WidgetSnapShot.repaint(gKey);
     setState(() => _byteData = byteData);
