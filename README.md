@@ -12,7 +12,7 @@ To install simple_build_context, add the following dependency to your pubspec.ya
 
 ````flutter
 dependencies:
-  simple_widget_snapshot: ^1.0.1
+  simple_widget_snapshot: ^1.0.2
 ````
 
 Then run  ```flutter pub get``` on the command line
@@ -132,11 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _captureSnapShot() async {
-    ByteData byteData = await WidgetSnapShot.capture(child:Container(
+    ByteData? byteData = await WidgetSnapShot.capture(context, child:Container(
       width: 300,
       height: 400,
       color: Colors.blue,
-    ));
+    ),fit: BoxFit.scaleDown);
     setState(() => _byteData = byteData);
   }
 

@@ -8,40 +8,45 @@ import 'package:simple_widget_snapshot/src/build_snapshot.dart';
 
 class WidgetSnapShot{
 
-  static Future<ByteData> capture( {
-    required Widget child,
-    Alignment alignment = Alignment.center,
-    Size size = const Size(double.maxFinite, double.maxFinite),
-    double devicePixelRatio = 1.0,
-    double pixelRatio = 1.0
-  } ) async {
+  static Future<ByteData?> capture(
+      BuildContext context, {
+        required Widget child,
+        double pixelRatio = 3.0,
+        BoxFit fit = BoxFit.scaleDown,
+      }) async {
+    final GlobalKey repaintBoundaryKey = GlobalKey();
+    final OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
+      return RepaintBoundary(
+        key: repaintBoundaryKey,
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: FittedBox(
+            fit: fit,
+            child: child,
+          ),
+        ),
+      );
+    });
 
-    RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
+    Overlay.of(context).insert(overlayEntry);
 
-    RenderView renderingSnapShot = RenderView(
-      child: RenderPositionedBox(alignment: alignment, child: repaintBoundary),
-      configuration: ViewConfiguration(
-        size: size,
-        devicePixelRatio: devicePixelRatio,
-      ),
-      view: WidgetsBinding.instance.platformDispatcher.views.first,
-    );
+    // Wait for the widget to be built.
+    await Future.delayed(const Duration(milliseconds: 20));
 
+    final RenderRepaintBoundary? boundary = repaintBoundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
-    PipelineOwner pipelineOwner = PipelineOwner();
-    pipelineOwner.rootNode = renderingSnapShot;
-    renderingSnapShot.prepareInitialFrame();
+    if (boundary == null) {
+      overlayEntry.remove();
+      return null;
+    }
 
-    BuildSnapShot.build(repaintBoundary: repaintBoundary, child: child);
+    final ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
+    final ByteData? byteData =
+    await image.toByteData(format: ui.ImageByteFormat.png);
 
-    pipelineOwner.flushLayout();
-    pipelineOwner.flushCompositingBits();
-    pipelineOwner.flushPaint();
+    overlayEntry.remove();
 
-    ui.Image image = await repaintBoundary.toImage(pixelRatio: pixelRatio);
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-
-    return byteData!;
+    return byteData;
   }
 
   static Future<ByteData> repaint(GlobalKey key, {double pixelRatio = 1.0, Duration? duration}) {

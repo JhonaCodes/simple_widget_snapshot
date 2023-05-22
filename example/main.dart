@@ -131,11 +131,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _captureSnapShot() async {
-    ByteData byteData = await WidgetSnapShot.capture(child:Container(
+    ByteData? byteData = await WidgetSnapShot.capture(context, child:Container(
       width: 300,
       height: 400,
       color: Colors.blue,
-    ));
+    ), fit: BoxFit.scaleDown);
     setState(() => _byteData = byteData);
   }
 
