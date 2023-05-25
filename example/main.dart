@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: ()=> _repaintSnapShot(_globalKey),
+            onPressed: ()=> repaintSnapShot(_globalKey),
             tooltip: 'Repaint SnapShot',
             child: const Icon(Icons.cached),
           ),
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 20,
           ),
           FloatingActionButton(
-            onPressed: _captureSnapShot,
+            onPressed: captureSnapShot,
             tooltip: 'Capture SnapShot',
             child: const Icon(Icons.camera_alt),
           ),
@@ -125,12 +125,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _repaintSnapShot(GlobalKey<State<StatefulWidget>> gKey) async {
+  repaintSnapShot(GlobalKey<State<StatefulWidget>> gKey) async {
     ByteData byteData = await WidgetSnapShot.repaint(gKey);
     setState(() => _byteData = byteData);
   }
 
-  _captureSnapShot() async {
+  captureSnapShot() async {
     ByteData? byteData = await WidgetSnapShot.capture(context, child:Container(
       width: 300,
       height: 400,

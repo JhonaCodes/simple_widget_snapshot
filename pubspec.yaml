@@ -1,6 +1,6 @@
 name: simple_widget_snapshot
-description: Simple library for widget snapshot
-version: 1.0.2
+description: Simple library for widget snapshot, easy to use for send image from specific widget.
+version: 1.0.3
 repository: https://github.com/JhonaCodes/simple_widget_snapshot
 homepage: https://github.com/JhonaCodes/simple_widget_snapshot
 

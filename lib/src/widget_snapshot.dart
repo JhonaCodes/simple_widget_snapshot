@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
-import 'package:simple_widget_snapshot/src/build_snapshot.dart';
 
 
 class WidgetSnapShot{
@@ -13,13 +12,15 @@ class WidgetSnapShot{
         required Widget child,
         double pixelRatio = 3.0,
         BoxFit fit = BoxFit.scaleDown,
+        TextDirection textDirection = TextDirection.ltr,
+        GlobalKey? customGlobalKey,
       }) async {
     final GlobalKey repaintBoundaryKey = GlobalKey();
     final OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
       return RepaintBoundary(
-        key: repaintBoundaryKey,
+        key: customGlobalKey ?? repaintBoundaryKey,
         child: Directionality(
-          textDirection: TextDirection.ltr,
+          textDirection: textDirection,
           child: FittedBox(
             fit: fit,
             child: child,
@@ -30,7 +31,6 @@ class WidgetSnapShot{
 
     Overlay.of(context).insert(overlayEntry);
 
-    // Wait for the widget to be built.
     await Future.delayed(const Duration(milliseconds: 20));
 
     final RenderRepaintBoundary? boundary = repaintBoundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
@@ -62,11 +62,4 @@ class WidgetSnapShot{
 
   }
 
-  /// Next Update
-  /*
-  static void toImage({String format = 'png'}){
-
-  }
-
-   */
 }

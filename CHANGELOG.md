@@ -12,3 +12,7 @@
 * Now you can adjust the fit of your images.
 * The quality of the generated image is superior.
 * Use of context to capture image.
+
+## 1.0.3
+* Now you can add custom TextDirection and custom GlobalKey
+* Minor changes for dart convention

@@ -22,16 +22,13 @@ class BuildImageSnapShot{
 
 
   Future<void> _convertToPng(Uint8List imageData) async {
-    // Decodifica la imagen desde Uint8List
+
     ui.Image img = await decodeImageFromList(imageData);
 
-    // Convierte la imagen a ByteData en formato png
     ByteData? byteData = await img.toByteData(format: ui.ImageByteFormat.png);
 
-    // Convierte ByteData a Uint8List
     Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-    // Guarda la imagen en disco
     final directory = await getApplicationDocumentsDirectory();
     final imagePath = '${directory.path}/image.png';
     final File imageFile = File(imagePath);
