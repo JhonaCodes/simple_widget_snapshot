@@ -4,17 +4,17 @@ import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
 
-
-class WidgetSnapShot{
-
+/// Main class for call functions [capture] and [repaint]
+class WidgetSnapShot {
+  /// Capture image, use the coming widget for repaint and transform to [ByteData]
   static Future<ByteData?> capture(
-      BuildContext context, {
-        required Widget child,
-        double pixelRatio = 3.0,
-        BoxFit fit = BoxFit.scaleDown,
-        TextDirection textDirection = TextDirection.ltr,
-        GlobalKey? customGlobalKey,
-      }) async {
+    BuildContext context, {
+    required Widget child,
+    double pixelRatio = 3.0,
+    BoxFit fit = BoxFit.scaleDown,
+    TextDirection textDirection = TextDirection.ltr,
+    GlobalKey? customGlobalKey,
+  }) async {
     final GlobalKey repaintBoundaryKey = GlobalKey();
     final OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
       return RepaintBoundary(
@@ -33,7 +33,8 @@ class WidgetSnapShot{
 
     await Future.delayed(const Duration(milliseconds: 20));
 
-    final RenderRepaintBoundary? boundary = repaintBoundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    final RenderRepaintBoundary? boundary = repaintBoundaryKey.currentContext
+        ?.findRenderObject() as RenderRepaintBoundary?;
 
     if (boundary == null) {
       overlayEntry.remove();
@@ -42,24 +43,26 @@ class WidgetSnapShot{
 
     final ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
     final ByteData? byteData =
-    await image.toByteData(format: ui.ImageByteFormat.png);
+        await image.toByteData(format: ui.ImageByteFormat.png);
 
     overlayEntry.remove();
 
     return byteData;
   }
 
-  static Future<ByteData> repaint(GlobalKey key, {double pixelRatio = 1.0, Duration? duration}) {
-
-    return Future.delayed(duration ?? const Duration(milliseconds: 20), () async {
-      RenderRepaintBoundary repaintBoundary = key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+  /// This is the same [capture] but use only [key] for identificate widget and transform to [ByteData]
+  static Future<ByteData> repaint(GlobalKey key,
+      {double pixelRatio = 1.0, Duration? duration}) {
+    return Future.delayed(duration ?? const Duration(milliseconds: 20),
+        () async {
+      RenderRepaintBoundary repaintBoundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
 
       ui.Image image = await repaintBoundary.toImage(pixelRatio: pixelRatio);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
 
       return byteData!;
     });
-
   }
-
 }
