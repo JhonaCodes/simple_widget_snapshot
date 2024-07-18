@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.5
+* Upgrade SDK.
+
 ## 1.0.4
 * Dart format.
 

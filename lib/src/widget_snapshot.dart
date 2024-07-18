@@ -7,13 +7,7 @@ import 'package:flutter/rendering.dart';
 /// Main class for call functions [capture] and [repaint]
 class WidgetSnapShot {
   /// Capture image, use the coming widget for repaint and transform to [ByteData]
-  static Future<ByteData?> capture(
-    BuildContext context, {
-    required Widget child,
-    double pixelRatio = 3.0,
-    BoxFit fit = BoxFit.scaleDown,
-    TextDirection textDirection = TextDirection.ltr,
-    GlobalKey? customGlobalKey,
+  static Future<ByteData?> capture( BuildContext context, { required Widget child, double pixelRatio = 3.0, BoxFit fit = BoxFit.scaleDown, TextDirection textDirection = TextDirection.ltr, GlobalKey? customGlobalKey,
   }) async {
     final GlobalKey repaintBoundaryKey = GlobalKey();
     final OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
@@ -29,7 +23,6 @@ class WidgetSnapShot {
       );
     });
 
-    Overlay.of(context).insert(overlayEntry);
 
     await Future.delayed(const Duration(milliseconds: 20));
 
