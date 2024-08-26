@@ -5,8 +5,8 @@ repository: https://github.com/JhonaCodes/simple_widget_snapshot
 homepage: https://github.com/JhonaCodes/simple_widget_snapshot
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
-  flutter: ">=3.24.0 <4.0.0"
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
