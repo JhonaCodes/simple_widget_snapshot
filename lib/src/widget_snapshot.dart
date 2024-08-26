@@ -1,61 +1,104 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-
-import 'dart:ui' as ui;
-import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
 
-/// Main class for call functions [capture] and [repaint]
-class WidgetSnapShot {
-  /// Capture image, use the coming widget for repaint and transform to [ByteData]
-  static Future<ByteData?> capture( BuildContext context, { required Widget child, double pixelRatio = 3.0, BoxFit fit = BoxFit.scaleDown, TextDirection textDirection = TextDirection.ltr, GlobalKey? customGlobalKey,
-  }) async {
-    final GlobalKey repaintBoundaryKey = GlobalKey();
-    final OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
-      return RepaintBoundary(
-        key: customGlobalKey ?? repaintBoundaryKey,
-        child: Directionality(
-          textDirection: textDirection,
-          child: FittedBox(
-            fit: fit,
-            child: child,
-          ),
-        ),
-      );
-    });
+import 'package:intl/intl.dart';
+
+/// A utility class for capturing widget snapshots and converting them to various image formats.
+class WidgetSnapshot {
+
+  static ByteData? _byteData;
+  static Uint8List? _uint8list;
+  static int? _bytes;
+  static Image? _imageMemory;
 
 
-    await Future.delayed(const Duration(milliseconds: 20));
+  /// Captures a widget as a ui.Image.
+  ///
+  /// This private method handles the core functionality of capturing the widget.
+  ///
+  /// Parameters:
+  /// - key: GlobalKey of the widget to capture.
+  /// - pixelRatio: The pixel ratio for the image capture.
+  /// - delay: Duration to wait before capturing, allowing widget to fully render.
+  ///
+  /// Returns a Future<ui.Image?> representing the captured image.
+  static Future<ui.Image?> _captureWidget( GlobalKey key, { required double pixelRatio, required Duration delay, }) async {
 
-    final RenderRepaintBoundary? boundary = repaintBoundaryKey.currentContext
-        ?.findRenderObject() as RenderRepaintBoundary?;
+    try {
 
-    if (boundary == null) {
-      overlayEntry.remove();
+      // Wait a bit to ensure the widget is fully rendered
+      await Future.delayed(delay);
+
+      // Getting the RenderRepaintBoundary
+      RenderRepaintBoundary? boundary = key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+
+      if (boundary == null) {
+        throw Exception('Could not find RenderRepaintBoundary');
+      }
+
+      // Capture the image
+      ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
+
+      return image;
+
+    } catch (error, stackTrace) {
+      log(error.toString());
+      log(stackTrace.toString());
       return null;
     }
 
-    final ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
-    final ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
-
-    overlayEntry.remove();
-
-    return byteData;
   }
 
-  /// This is the same [capture] but use only [key] for identificate widget and transform to [ByteData]
-  static Future<ByteData> repaint(GlobalKey key,
-      {double pixelRatio = 1.0, Duration? duration}) {
-    return Future.delayed(duration ?? const Duration(milliseconds: 20),
-        () async {
-      RenderRepaintBoundary repaintBoundary =
-          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
 
-      ui.Image image = await repaintBoundary.toImage(pixelRatio: pixelRatio);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+  /// Captures a widget and returns various representations of the captured image.
+  ///
+  /// Parameters:
+  /// - key: GlobalKey of the widget to capture.
+  /// - pixelRatio: The pixel ratio for the image capture (default: 1.0).
+  /// - delay: Duration to wait before capturing (default: 20 milliseconds).
+  ///
+  /// Returns a Future<SnapshotResult> containing different image representations.
+  static Future<SnapshotResult> capture( GlobalKey key, { double pixelRatio = 1.0,  Duration delay = const Duration(milliseconds: 20), }) async {
+    ui.Image? image = await _captureWidget(key, pixelRatio: pixelRatio, delay: delay);
 
-      return byteData!;
-    });
+    if (image != null) {
+
+      _byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      _uint8list = _byteData?.buffer.asUint8List();
+      _bytes = _byteData?.buffer.lengthInBytes;
+      _imageMemory = _uint8list != null ? Image.memory(_uint8list!) : null;
+
+      if(_byteData == null){
+        log('Could not convert image to bytes');
+      }else{
+        var formatter = NumberFormat('#,##0.00');
+        log('Image generated successfully: ${formatter.format(_bytes)} bytes');
+      }
+
+    } else {
+      log('Could not capture image');
+    }
+
+    return SnapshotResult(
+        byteData: _byteData,
+        uint8list: _uint8list,
+        imageFromMemory: _imageMemory,
+        bytesImage: _bytes
+    );
   }
+
+}
+
+/// A class to hold various representations of the captured image.
+class SnapshotResult{
+  final ByteData? byteData;
+  final Uint8List? uint8list;
+  final int? bytesImage;
+  final Image? imageFromMemory;
+  SnapshotResult({this.byteData, this.uint8list, this.imageFromMemory, this.bytesImage});
 }

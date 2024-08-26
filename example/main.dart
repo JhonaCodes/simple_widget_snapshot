@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+final GlobalKey _globalKey = GlobalKey();
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -37,7 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
   /// First step is declare a private varaible if you prefeer use just for this context
   /// and for this example i'm create a [GlobalKey]
   ByteData? _byteData;
-  final GlobalKey _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -48,53 +49,40 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: CaptureWidget(
-          key: _globalKey,
-          byteData: _byteData!,
+          byteData: _byteData,
         ),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => repaintSnapShot(_globalKey),
+            onPressed: () async{
+
+              WidgetSnapshot.capture(_globalKey,pixelRatio: 3.0).then((image){
+                setState(() {
+                  _byteData = image.byteData;
+                });
+              });
+
+
+            },
             tooltip: 'Repaint SnapShot',
-            child: const Icon(Icons.cached),
+            child: const Icon(Icons.camera_alt),
           ),
           const SizedBox(
             width: 20,
-          ),
-          FloatingActionButton(
-            onPressed: captureSnapShot(
-              CaptureWidget(
-                key: _globalKey,
-                byteData: _byteData!,
-              ),
-            ),
-            tooltip: 'Capture SnapShot',
-            child: const Icon(Icons.camera_alt),
           ),
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  /// Example using [GlobalKey] for capture widget and transform to [ByteData]
-  repaintSnapShot(GlobalKey<State<StatefulWidget>> gKey) async {
-    ByteData byteData = await WidgetSnapShot.repaint(gKey);
-    setState(() => _byteData = byteData);
-  }
 
-  /// Example where you can use strict widget for transform to [ByteData]
-  captureSnapShot(Widget child) async {
-    ByteData? byteData = await WidgetSnapShot.capture(context,
-        child: child, fit: BoxFit.scaleDown);
-    setState(() => _byteData = byteData);
-  }
 }
 
 class CaptureWidget extends StatelessWidget {
   final ByteData? byteData;
-  const CaptureWidget({Key? key, this.byteData}) : super(key: key);
+  const CaptureWidget({super.key, this.byteData});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +91,7 @@ class CaptureWidget extends StatelessWidget {
       children: <Widget>[
         RepaintBoundary(
           /// Used for paint icon
-          key: key,
+          key: _globalKey,
 
           /// necesary for identificate the icon to reapint
           child: Container(
@@ -126,10 +114,10 @@ class CaptureWidget extends StatelessWidget {
                     color: Colors.green,
                     child: const Center(
                         child: Text(
-                      'Account',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w900),
-                    )),
+                          'Account',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w900),
+                        )),
                   ),
                 ),
                 const Text(' Factura: 98234y49837gh'),
@@ -146,11 +134,11 @@ class CaptureWidget extends StatelessWidget {
         const Text("TAKE PHOTO ICON"),
         byteData != null
             ? Container(
-                height: 200,
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
-                child: Image.memory(byteData!.buffer.asUint8List()),
-              )
+          height: 200,
+          decoration:
+          BoxDecoration(border: Border.all(color: Colors.black)),
+          child: Image.memory(byteData!.buffer.asUint8List()),
+        )
             : Container()
       ],
     );

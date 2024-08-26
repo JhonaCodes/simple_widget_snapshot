@@ -10,138 +10,110 @@ Capture snapshots of your widgets and convert them into images or PDF files with
 ## Installation
 To install simple_build_context, add the following dependency to your pubspec.yaml file:
 
+## Flutter install:
+```dart
+flutter pub add simple_widget_snapshot
+```
+## This will add a line like this to your package's pubspec.yaml (and run an implicit dart pub get):
 ````flutter
 dependencies:
-  simple_widget_snapshot: ^1.0.6
+  simple_widget_snapshot: ^2.0.0
 ````
 
-Then run  ```flutter pub get``` on the command line
-
-
 ## Use
-```flutter
-import 'package:simple_build_context/src/simple_widget_snapshot.dart';
+
+# WidgetSnapshot Usage Guide
+
+The `WidgetSnapshot` class provides a simple way to capture a widget as an image.
+This guide demonstrates how to use it in your Flutter application.
+
+## Basic Usage
+
+1. Create a `GlobalKey` to identify the widget you want to capture:
+```dart
+final GlobalKey _globalKey = GlobalKey();
 ```
+
+2. Wrap the widget you want to capture with a `RepaintBoundary` and assign the `GlobalKey`:
+```dart
+    RepaintBoundary(
+      key: _globalKey, 
+      child: YourWidget(),
+    )
+```
+
+ 3. Call the `WidgetSnapshot.capture()` method to capture the widget:
+```dart
+    WidgetSnapshot.capture(_globalKey, pixelRatio: 3.0).then((result) {
+      // Use the captured image data
+      setState(() {
+        _byteData = result.byteData;
+      });
+    });
+```
+
+
+## Example
+Here's a complete example of how to use `WidgetSnapshot` in a Flutter app:
 
 ```dart
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
 class _MyHomePageState extends State<MyHomePage> {
-  ByteData? _byteData;
-  final GlobalKey _globalKey = GlobalKey();
+   ByteData? _byteData;
 
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
-      ),
-      body:  Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RepaintBoundary( /// Used for paint icon
-              key: _globalKey, /// necesary for identificate the icon to reapint
-              child: Container(
-                height: 200,
-                width: 200,
-                margin: const EdgeInsets.all(0),
-
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: Colors.red,
-                        width: 2
-                    )
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10)),
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.green,
-                        child: const Center(child: Text('Account', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900),)),
-                      ),
-                    ),
-
-                    const Text(' Factura: 98234y49837gh'),
-                    const Text(' Name: JhonaCode'),
-                    const Text(' Price: \$ 1.200'),
-                    const Spacer(),
-                    const Text(' DONE', style: TextStyle(color: Colors.green, fontWeight: FontWeight.w900))
-                  ],
-                ),
-              ),
-            ),
-
-            const Text("TAKE PHOTO ICON"),
-            _byteData != null ? Container(
-              height: 200,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black)
-              ),
-              child: Image.memory(
-                  _byteData!.buffer.asUint8List()
-              ),
-            ) : Container()
-
-          ],
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: ()=> _repaintSnapShot(_globalKey),
-            tooltip: 'Repaint SnapShot',
-            child: const Icon(Icons.cached),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          FloatingActionButton(
-            onPressed: _captureSnapShot,
-            tooltip: 'Capture SnapShot',
-            child: const Icon(Icons.camera_alt),
-          ),
-        ],
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-  _repaintSnapShot(GlobalKey<State<StatefulWidget>> gKey) async {
-    ByteData byteData = await WidgetSnapShot.repaint(gKey);
-    setState(() => _byteData = byteData);
-  }
-
-  _captureSnapShot() async {
-    ByteData? byteData = await WidgetSnapShot.capture(context, child:Container(
-      width: 300,
-      height: 400,
-      color: Colors.blue,
-    ),fit: BoxFit.scaleDown);
-    setState(() => _byteData = byteData);
-  }
-
-}
-
+   @override
+   Widget build(BuildContext context) {
+     return Scaffold(
+       appBar: AppBar(title: Text('WidgetSnapshot Demo')),
+       body: Center(
+         child: Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: <Widget>[
+             RepaintBoundary(
+               key: _globalKey,
+               child: Container(
+                 height: 200,
+                 width: 200,
+                 color: Colors.blue,
+                 child: Center(child: Text('Capture me!')),
+               ),
+             ),
+             SizedBox(height: 20),
+             ElevatedButton(
+               onPressed: () {
+                 WidgetSnapshot.capture(_globalKey, pixelRatio: 3.0).then((result) {
+                   setState(() {
+                     _byteData = result.byteData;
+                   });
+                 });
+               },
+               child: Text('Capture Widget'),
+             ),
+             SizedBox(height: 20),
+             if (_byteData != null)
+               Container(
+                 height: 200,
+                 width: 200,
+                 child: Image.memory(_byteData!.buffer.asUint8List()),
+               ),
+           ],
+         ),
+       ),
+     );
+   }
+ }
 ```
+
+/// This example demonstrates:
+1. Setting up a widget to be captured using `RepaintBoundary` and a `GlobalKey`.
+2. Capturing the widget when a button is pressed.
+3. Displaying the captured image below the original widget.
+
+## Notes
+- The `pixelRatio` parameter in `WidgetSnapshot.capture()` affects the quality of the captured image.
+  Higher values result in higher quality but larger file sizes.
+- Make sure the widget you're capturing is fully rendered before capturing it.
+- The captured image is returned as part of a `SnapshotResult` object, which includes
+  various representations of the image (ByteData, Uint8List, Image).
 
 <img src="https://raw.githubusercontent.com/JhonaCodes/simple_widget_snapshot/main/assets/step1.png" width="400" height="800" />
 

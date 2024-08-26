@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0
+* Breaking changes:
+  * Change name of class for `WidgetSnapshot`.
+  * Now just need use one function for widget capture `capture`.
+  * Now the capture is done through a `GlobalKey`.
+  * The `capture` function returns a `SnapshotResult` object, which contains the image properties such as: `byteData`, `uint8list`, `imageFromMemory` and `bytesImage`.
+
 ## 1.0.6
 ## 1.0.5
 * Upgrade SDK.
