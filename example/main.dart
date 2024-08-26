@@ -56,15 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () async{
-
-              WidgetSnapshot.capture(_globalKey,pixelRatio: 3.0).then((image){
+            onPressed: () async {
+              WidgetSnapshot.capture(_globalKey, pixelRatio: 3.0).then((image) {
                 setState(() {
                   _byteData = image.byteData;
                 });
               });
-
-
             },
             tooltip: 'Repaint SnapShot',
             child: const Icon(Icons.camera_alt),
@@ -76,8 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
-
 }
 
 class CaptureWidget extends StatelessWidget {
@@ -114,10 +109,10 @@ class CaptureWidget extends StatelessWidget {
                     color: Colors.green,
                     child: const Center(
                         child: Text(
-                          'Account',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w900),
-                        )),
+                      'Account',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w900),
+                    )),
                   ),
                 ),
                 const Text(' Factura: 98234y49837gh'),
@@ -134,11 +129,11 @@ class CaptureWidget extends StatelessWidget {
         const Text("TAKE PHOTO ICON"),
         byteData != null
             ? Container(
-          height: 200,
-          decoration:
-          BoxDecoration(border: Border.all(color: Colors.black)),
-          child: Image.memory(byteData!.buffer.asUint8List()),
-        )
+                height: 200,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                child: Image.memory(byteData!.buffer.asUint8List()),
+              )
             : Container()
       ],
     );
