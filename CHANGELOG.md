@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.1
+* Update `intl` to latest version.
+
 ## 2.0.0
 * Breaking changes:
   * Change name of class for `WidgetSnapshot`.

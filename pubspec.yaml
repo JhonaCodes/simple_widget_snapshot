@@ -1,6 +1,6 @@
 name: simple_widget_snapshot
 description: Simple library for widget snapshot, easy to use for send image from specific widget.
-version: 2.0.0
+version: 2.0.1
 repository: https://github.com/JhonaCodes/simple_widget_snapshot
 homepage: https://github.com/JhonaCodes/simple_widget_snapshot
 
@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.1.4
-  intl: ^0.19.0
+  path_provider: ^2.1.5
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

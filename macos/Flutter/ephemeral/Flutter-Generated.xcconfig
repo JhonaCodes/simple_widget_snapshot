@@ -1,5 +1,5 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/opt/homebrew/Caskroom/flutter/3.24.0/flutter
+FLUTTER_ROOT=/opt/homebrew/Caskroom/flutter/3.29.3/flutter
 FLUTTER_APPLICATION_PATH=/Volumes/Data/Private/04_Librarys/simple_widget_snapshot
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build

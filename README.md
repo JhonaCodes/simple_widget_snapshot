@@ -17,7 +17,7 @@ flutter pub add simple_widget_snapshot
 ## This will add a line like this to your package's pubspec.yaml (and run an implicit dart pub get):
 ````flutter
 dependencies:
-  simple_widget_snapshot: ^2.0.0
+  simple_widget_snapshot: ^2.0.1
 ````
 
 ## Use
